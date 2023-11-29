@@ -1,46 +1,66 @@
-version: '3'
+# version: '3'
 
+# services:
+#   postgres:
+#     image: postgres:latest
+#     restart: always
+#     environment:
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: root
+#       POSTGRES_DB: postes
+#     ports:
+#       - "5432:5432"
+#     networks:
+#       - my-network
+#     volumes:
+#       - postgres-data:/var/lib/postgresql/data
+
+#   pgadmin:
+#     image: dpage/pgadmin4:latest
+#     restart: always
+#     environment:
+#       PGADMIN_DEFAULT_EMAIL: admin@example.com
+#       PGADMIN_DEFAULT_PASSWORD: admin
+#     ports:
+#       - "8080:8080"
+#     networks:
+#       - my-network
+
+#   app:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     restart: always
+#     depends_on:
+#       - postgres
+#     environment:
+#       DATABASE_URL: postgres://postgres:root@postgres:5432/postes
+#     ports:
+#       - "4000:4000"
+#     networks:
+#       - my-network
+
+# networks:
+#   my-network:
+#     driver: bridge
+
+# volumes:
+#   postgres-data:
+version: "3.7"
 services:
-  postgres:
-    image: postgres:latest
-    restart: always
+  db:
+    image: postgres
     environment:
-      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
+      POSTGRES_USER: postgres
       POSTGRES_DB: postes
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    networks:
-      - my-network
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    restart: always
-
-    ports:
-      - "8080:8080"
-    networks:
-      - my-network
-
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: always
+  web:
+    image: mini-prj
     depends_on:
-      - postgres
-    environment:
-      DATABASE_URL: postgres://postgres:root@postgres:5432/postes
+      - db
     ports:
-      - "3000:3000"
-    networks:
-      - my-network
-
-networks:
-  my-network:
-    driver: bridge
-
-volumes:
-  postgres-data:
+      - "4000:4000"
